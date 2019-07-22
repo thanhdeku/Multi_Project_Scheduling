@@ -24,13 +24,12 @@ else:
 params.problems = MultiProjectScheduling(params.data)
 # print(params.problems.process_time)
 params.size = params.problems.num_operation * params.problems.num_job
-
-population = Population(params.POP_SIZE,params.problems,True)
-crossover = Crossover()
-mutation = Mutation()
-
+params.result = np.array([])
 for seed in range(params.NUM_SEED):
-    print('Seed-'+str(seed))
+    np.random.seed(seed)
+    population = Population(params.POP_SIZE, params.problems, True)
+    crossover = Crossover()
+    mutation = Mutation()
     for iter in range(params.NUM_ITERS):
         parentSelection = population.parentSelection(params.PAIRS_SIZE, type='tournament')
         for idx, (idx_parent1, idx_parent2) in enumerate(parentSelection.values()):
@@ -53,8 +52,10 @@ for seed in range(params.NUM_SEED):
         if iter == params.NUM_ITERS -1:
             print('Iteration-' + str(iter + 1) + '=======Best Fitness=======' + str(
                 population.popFitness[population.best_individual()]))
-    # print(population.get(population.best_individual()).representation)
 
-
+    params.result = np.append(params.result,population.popFitness[population.best_individual()])
+print(params.result)
+print(np.mean(params.result))
+print(np.std(params.result))
 
 

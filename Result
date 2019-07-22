@@ -1,4 +1,4 @@
-ç1. Data : data/data-J5-O8-M5-S376.txt
+1. Data : data/data-J5-O8-M5-S376.txt
 GA
 Crossover: PMX
 CX_Rate: 0.7
@@ -6,4 +6,4 @@ Mutation: Random
 MU_Rate: 0.03
 Local Search: No
 301.0, 297.0, 276.0, 280.0, 296.0, 281.0, 289.0, 291.0, 286.0, 298.0
-Mean: 2895.0
+Mean: 289.5
