@@ -1,8 +1,8 @@
 # Created by Thanh C. Le at 7/19/19
 import argparse
 import numpy as np
-from ga_mechanism import *
 from data import *
+from mechanism.ga_mechanism import Population, Crossover, Mutation, Individual
 from problem import MultiProjectScheduling
 ## Load parameters
 parser = argparse.ArgumentParser(description='Genetic Algorithm Single Objective for Multi-Project Scheduling')
@@ -23,7 +23,7 @@ else:
 
 params.problems = MultiProjectScheduling(params.data)
 # print(params.problems.process_time)
-params.size = params.problems.num_operation * params.problems.num_job
+params.size = params.problems.num_task * params.problems.num_project
 params.result = np.array([])
 for seed in range(params.NUM_SEED):
     np.random.seed(seed)
