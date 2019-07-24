@@ -76,9 +76,9 @@ class MultiProjectScheduling():
                 machine_scheduling.append(np.random.choice(self.num_staff, p=self.probs[:, operation_scheduling[i]]))
         return np.concatenate((operation_scheduling,np.array(machine_scheduling)))
 
-def test():
-    data = loadData('data/data-J5-O8-M5-S136.txt')
-    problem = MultiProjectScheduling(data)
-    gen = problem.generate_genotype()
-    print(problem.computeSalary(gen))
-test()
+# def test():
+#     data = loadData('data/data-J5-O8-M5-S136.txt')
+#     problem = MultiProjectScheduling(data)
+#     gen = problem.generate_genotype()
+#     print(problem.computeSalary(gen))
+# test()
