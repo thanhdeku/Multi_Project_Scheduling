@@ -11,7 +11,7 @@ parser.add_argument("--PAIRS_SIZE",type=int, default=50, help="offspring size")
 parser.add_argument("--CX_RATE", type=float, default=0.7, help="crossover rate")
 parser.add_argument("--MU_RATE", type=float, default=0.01, help="mutation rate")
 parser.add_argument("--NUM_ITERS",type=int,default=100,help="number of iteration")
-parser.add_argument("--DATA",type=str,default='data/data-J5-O8-M5-S136.txt',help="path to dataset")
+parser.add_argument("--DATA",type=str,default='data/data-P5-T8-S5-seed949.txt',help="path to dataset")
 parser.add_argument("--NUM_SEED",type=int,default=5,help="number of seed to get median of result")
 params = parser.parse_args()
 

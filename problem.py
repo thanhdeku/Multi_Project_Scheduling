@@ -7,9 +7,10 @@ import numpy as np
 class MultiProjectScheduling():
     def __init__(self,data):
         self.num_project, self.num_task, self.num_staff, self.process_time, self.salary = data
-        sum = np.sum(self.process_time,axis=0)
-        self.probs = (1 - self.process_time / (sum.reshape(1, self.num_task * self.num_project))) / (self.num_staff - 1)
-
+        # sum = np.sum(self.process_time,axis=0)
+        # self.probs = (1 - self.process_time / (sum.reshape(1, self.num_task * self.num_project))) / (self.num_staff - 1)
+        sum = np.sum(1/self.process_time,axis=0)
+        self.probs = (1/self.process_time)/(sum.reshape(1, self.num_task * self.num_project))
 
     def computeFitness(self,genotype):
         return self.computeTotalTime(genotype)

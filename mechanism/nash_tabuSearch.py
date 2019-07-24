@@ -53,18 +53,47 @@ class Individual:
             gen[size + pivot1:size + pivot2] = self.representation[size + pivot1 + 1:size + pivot2 + 1]
             gen[size + pivot2] = self.representation[size + pivot1]
         if type == 1:
-            gen[size + pivot1:size + pivot2] = self.representation[size + pivot1 + 1:size + pivot2 + 1]
-            gen[size + pivot2] = self.representation[size + pivot1]
+            rand = np.random.rand()
+            if rand < 0.9:
+                gen[size + pivot2] = self.representation[size + pivot1]
+                gen[size + pivot1] = self.representation[size + pivot2]
+            else:
+                gen[size + pivot1] = \
+                    np.random.choice(self.problem.num_staff, p=self.problem.probs[:, self.representation[pivot1]])
+
+
         return gen
 
 class TabuSearch:
     def __init__(self,problem):
         self.problem = problem
         self.candidate = Individual(problem,[],True)
-        self.best = self.candidate
+        self.paretoSet = []
+        self.paretoSet.append(Individual(problem,np.copy(self.candidate.representation),False))
         self.TabuList = {}
         self.TabuIndex = 0
         self.add2TabuList(self.candidate)
+
+    def isDominate(self,ind1,ind2):
+        result = -1
+        if ind1.getFitness(0) <= ind2.getFitness(0):
+            result += 1
+        if ind1.getFitness(1) <= ind2.getFitness(1):
+            result += 1
+        return result
+
+    def updateParetoSet(self,ind):
+        newSet = []
+        addOptimal = False
+        for best in self.paretoSet:
+            if self.isDominate(ind,best) != 1:
+                newSet.append(best)
+            if self.isDominate(ind,best) != -1:
+                addOptimal = True
+        if addOptimal:
+            newSet.append(Individual(self.problem,ind.representation,False))
+        self.paretoSet = newSet
+
 
     def add2TabuList(self,ind):
         self.TabuList[self.TabuIndex] = ind
@@ -79,8 +108,7 @@ class TabuSearch:
         best = 0
         while (neighborhood[rank[best]] in self.TabuList):
             best += 1
-        if neighborFitness[rank[best]] < self.best.getFitness(type):
-            self.best = neighborhood[rank[best]]
+        self.updateParetoSet(neighborhood[rank[best]])
         self.add2TabuList(self.candidate)
         self.candidate = neighborhood[rank[best]]
 

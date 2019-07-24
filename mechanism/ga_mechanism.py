@@ -158,18 +158,5 @@ class Individual:
     def updateFitness(self,x):
         self.fitness = x
 
-def test():
-    # data = createData()
-    # problem = MultiProjectScheduling(data)
-    # pop = Population(5,problem)
-    # print(pop.parentSelection(5,'tournament'))
-    # x = np.random.permutation(5)
-    # y = np.array([1,1,2,3,1])
-    # z = np.concatenate((x,y))
-    # print(z)
-    # mutation = Mutation()
-    # print(mutation.randomMutation(z,3))
-    pass
 
 
-test()
