@@ -1,5 +1,7 @@
 # Created by Thanh C. Le at 7/24/19
 import sys
+from queue import Queue
+
 import numpy as np
 
 class Individual:
@@ -11,8 +13,8 @@ class Individual:
         self.salary_fitness = sys.maxsize
         if init:
             self.representation = self.generate_representation()
-        self.time_fitness = self.computeFitness('time')
-        self.salary_fitness = self.computeFitness('salary')
+        self.time_fitness = self.computeFitness(0)
+        self.salary_fitness = self.computeFitness(1)
 
     def generate_representation(self):
         return self.problem.generate_genotype()
@@ -20,16 +22,21 @@ class Individual:
     def updateFitness(self,x):
         self.fitness = x
 
-    def computeFitness(self,type='time'):
-        if type == 'time':
+    def getFitness(self,type=0):
+        if type == 0:
+            return self.time_fitness
+        if type == 1:
+            return self.salary_fitness
+    def computeFitness(self,type=0):
+        if type == 0:
             return self.problem.computeTotalTime(self.representation)
-        if type == 'salary':
+        if type == 1:
             return self.problem.computeSalary(self.representation)
 
     def neighborhood(self,num_neighbor,type=0):
         dict = {}
         for i in range(num_neighbor):
-            neighbor = self.findNeighbor()
+            neighbor = self.findNeighbor(type)
             dict[i] = Individual(self.problem,neighbor,False)
         return dict
 
@@ -50,20 +57,38 @@ class Individual:
             gen[size + pivot2] = self.representation[size + pivot1]
         return gen
 
-class TabuList:
-    def __init__(self,size,problem):
-        self.size = size
+class TabuSearch:
+    def __init__(self,problem):
         self.problem = problem
+        self.candidate = Individual(problem,[],True)
+        self.best = self.candidate
+        self.TabuList = {}
+        self.TabuIndex = 0
+        self.add2TabuList(self.candidate)
 
-    def generatePop(self):
-        pop = []
-        timeFitness = []
-        salaryFitness = []
-        for i in range(self.size):
-            ind = Individual(self.problem,[],True)
-            pop.append(ind)
-            timeFitness.append(ind.time_fitness)
-            salaryFitness.append(ind.salary_fitness)
+    def add2TabuList(self,ind):
+        self.TabuList[self.TabuIndex] = ind
+        self.TabuIndex += 1
+        if self.TabuIndex == 5:
+            self.TabuIndex = 0
+
+    def search(self,num_neighbor,type=0):
+        neighborhood = self.candidate.neighborhood(num_neighbor,type)
+        neighborFitness = [ind.getFitness(type) for ind in neighborhood.values()]
+        rank = np.argsort(neighborFitness)
+        best = 0
+        while (neighborhood[rank[best]] in self.TabuList):
+            best += 1
+        if neighborFitness[rank[best]] < self.best.getFitness(type):
+            self.best = neighborhood[rank[best]]
+        self.add2TabuList(self.candidate)
+        self.candidate = neighborhood[rank[best]]
+
+
+
+
+
+
 
 
 

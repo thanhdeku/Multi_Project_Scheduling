@@ -2,8 +2,6 @@
 from data import loadData
 from mechanism.nash_tabuSearch import Individual
 from problem import MultiProjectScheduling
-
-data = loadData('data/data-J5-O8-M5-S136.txt')
-problem = MultiProjectScheduling(data)
-ind = Individual(problem,[])
-print(ind.findNeighbor())
+import numpy as np
+x = np.array([0,9,2,5,4])
+print(np.argsort(x))
