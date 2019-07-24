@@ -85,13 +85,18 @@ class TabuSearch:
     def updateParetoSet(self,ind):
         newSet = []
         addOptimal = False
+        deleteOptimal = False
         for best in self.paretoSet:
             if self.isDominate(ind,best) != 1:
                 newSet.append(best)
             if self.isDominate(ind,best) != -1:
                 addOptimal = True
-        if addOptimal:
-            newSet.append(Individual(self.problem,ind.representation,False))
+            if self.isDominate(ind,best) == -1:
+                deleteOptimal = True
+
+        if not deleteOptimal:
+            if addOptimal:
+                newSet.append(Individual(self.problem, ind.representation, False))
         self.paretoSet = newSet
 
 
