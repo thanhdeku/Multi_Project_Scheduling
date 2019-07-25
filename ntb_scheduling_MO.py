@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 parser = argparse.ArgumentParser(description='Genetic Algorithm Single Objective for Multi-Project Scheduling')
 parser.add_argument("--NEIGHBOR_SIZE", type=int, default=10, help="neighborhood size")
 parser.add_argument("--NUM_ITERS",type=int,default=10000,help="number of iteration")
-parser.add_argument("--DATA",type=str,default='data/data-P5-T8-S5-seed949.txt',help="path to dataset")
+parser.add_argument("--DATA",type=str,default='data/data-P5-T8-S5-seed23.txt',help="path to dataset")
 parser.add_argument("--NUM_SEED",type=int,default=5,help="number of seed to get median of result")
 params = parser.parse_args()
 
@@ -51,14 +51,14 @@ for i in range(params.NUM_SEED):
             print('===MMID===' + str(round(eval.evalMMID(), 3)) + '===')
             print('===SPACING===' + str(round(eval.evalSpacing(), 3)) + '===')
             print('===DIVERSITY===' + str(round(eval.evalDiversity(), 3)) + '===')
-        run_time += time.time() - start_time
+    run_time += time.time() - start_time
 
 nps /= params.NUM_SEED
 mmid /= params.NUM_SEED
 spacing /= params.NUM_SEED
 diversity /= params.NUM_SEED
 run_time /= params.NUM_SEED
-w = open('Result/ntb.txt')
+w = open('Result/ntb.txt','w')
 w.write('NPS: ' + str(nps))
 w.write('MMID: ' + str(mmid))
 w.write('Spacing: ' + str(spacing))

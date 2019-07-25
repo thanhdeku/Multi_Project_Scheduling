@@ -54,7 +54,7 @@ class Individual:
             gen[size + pivot2] = self.representation[size + pivot1]
         if type == 1:
             rand = np.random.rand()
-            if rand < 0.5:
+            if rand < 0.3:
                 gen[size + pivot2] = self.representation[size + pivot1]
                 gen[size + pivot1] = self.representation[size + pivot2]
             else:
@@ -103,7 +103,7 @@ class TabuSearch:
     def add2TabuList(self,ind):
         self.TabuList[self.TabuIndex] = ind
         self.TabuIndex += 1
-        if self.TabuIndex == 20:
+        if self.TabuIndex == 5:
             self.TabuIndex = 0
 
     def search(self,num_neighbor,type=0):

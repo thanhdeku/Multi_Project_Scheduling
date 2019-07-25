@@ -14,7 +14,7 @@ parser.add_argument("--PAIRS_SIZE",type=int, default=50, help="offspring size")
 parser.add_argument("--CX_RATE", type=float, default=0.7, help="crossover rate")
 parser.add_argument("--MU_RATE", type=float, default=0.03, help="mutation rate")
 parser.add_argument("--NUM_ITERS",type=int,default=100,help="number of iteration")
-parser.add_argument("--DATA",type=str,default='data/data-P5-T8-S5-seed949.txt',help="path to dataset")
+parser.add_argument("--DATA",type=str,default='data/data-P5-T8-S5-seed23.txt',help="path to dataset")
 parser.add_argument("--NUM_SEED",type=int,default=5,help="number of seed to get median of result")
 params = parser.parse_args()
 
@@ -60,6 +60,9 @@ for i in range(params.NUM_SEED):
                 offspringPop.append(offspring1)
                 offspringPop.append(offspring2)
         population.addPopulation(offspringPop)
+        print(population.nonDominatedSet)
+        print(len(population.pop))
+        print(population.size)
 
         print('=======' + 'Iteration-' + str(iter + 1) + '=======')
         print(len(population.pop))
@@ -89,3 +92,4 @@ w.write('Spacing: ' + str(spacing))
 w.write('Diversity: ' + str(diversity))
 w.write('Run time: ' + str(run_time))
 w.close()
+

@@ -19,12 +19,15 @@ class EvaluateParetoFront:
 
     def evalSpacing(self):
         d = np.zeros(self.nps)
-        for i in range(self.nps):
-            distance = np.sum(np.abs(self.paretoFront - self.paretoFront[i]),axis=1)
-            d[i] = distance[np.argsort(distance)[1]]
-        d = d - np.mean(d)
-        d = d**2
-        return np.sqrt(np.sum(d)/(self.nps-1))
+        if self.nps == 1:
+            return 0
+        else:
+            for i in range(self.nps):
+                distance = np.sum(np.abs(self.paretoFront - self.paretoFront[i]), axis=1)
+                d[i] = distance[np.argsort(distance)[1]]
+            d = d - np.mean(d)
+            d = d ** 2
+            return np.sqrt(np.sum(d) / (self.nps - 1))
 
 
     def evalDiversity(self):
