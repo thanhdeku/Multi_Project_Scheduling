@@ -54,7 +54,7 @@ class Individual:
             gen[size + pivot2] = self.representation[size + pivot1]
         if type == 1:
             rand = np.random.rand()
-            if rand < 0.9:
+            if rand < 0.5:
                 gen[size + pivot2] = self.representation[size + pivot1]
                 gen[size + pivot1] = self.representation[size + pivot2]
             else:
