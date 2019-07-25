@@ -6,6 +6,65 @@ from data import loadData
 from problem import MultiProjectScheduling
 
 
+class Crossover:
+    def randomTwoPivot(self,size):
+        start_pivot = np.random.randint(0,size-1)
+        end_pivot = np.random.randint(start_pivot+1,size)
+        return start_pivot, end_pivot
+
+    def pmx(self,ind1,ind2,start_pivot,end_pivot):
+
+        size = min(len(ind1), len(ind2))
+        p1, p2 = np.zeros(size,dtype=int), np.zeros(size,dtype=int)
+
+        # Initialize the position of each indices in the individuals
+        for i in range(size):
+            p1[ind1[i]] = i
+            p2[ind2[i]] = i
+
+        off1 = np.copy(ind1)
+        off2 = np.copy(ind2)
+        # Apply crossover between cx points
+        for i in range(start_pivot, end_pivot):
+            # Keep track of the selected values
+            # Swap the matched value
+            off1[i], off1[p1[ind2[i]]] = ind2[i], ind1[i]
+            off2[i], off2[p2[ind1[i]]] = ind1[i], ind2[i]
+            # Position bookkeeping
+            p1[ind1[i]], p1[ind2[i]] = p1[ind2[i]], p1[ind1[i]]
+            p2[ind1[i]], p2[ind2[i]] = p2[ind2[i]], p2[ind1[i]]
+
+        return off1, off2
+
+    def cxTwoPoint(self,ind1,ind2,start_pivot,end_pivot):
+        size = min(len(ind1),len(ind2))
+        off1 = np.copy(ind1)
+        off2 = np.copy(ind2)
+        off1[start_pivot:end_pivot] = ind2[start_pivot:end_pivot]
+        off2[start_pivot:end_pivot] = ind1[start_pivot:end_pivot]
+
+        return off1, off2
+
+
+class Mutation:
+
+    def randomMutation(self,ind,num_of_mutation):
+        size = int(len(ind)/2)
+        for i in range(num_of_mutation):
+            first_point = np.random.randint(0, size)
+            second_point = np.random.randint(0, size)
+            while second_point == first_point:
+                second_point = np.random.randint(0, size)
+            temp1 = ind[first_point]
+            temp2 = ind[second_point]
+            ind[first_point] = temp2
+            ind[second_point] = temp1
+            temp1 = ind[first_point+size]
+            temp2 = ind[second_point+size]
+            ind[first_point+size] = temp2
+            ind[second_point+size] = temp1
+        return ind
+
 class Individual():
     def __init__(self,problem,representation,init = True,):
         self.problem = problem
@@ -131,6 +190,7 @@ class Population():
                 return True
             else:
                 return False
+
     def updateInfo(self):
         self.nonDominatedRank, self.nonDominatedSet = self.nonDominatedSort()
         self.crowdingDistance = self.computeCrowdingDistance()
@@ -148,11 +208,11 @@ class Population():
             length += l
             index += 1
         delta = size - len(newPop)
-
         if delta > 0:
             cw = [self.crowdingDistance[i] for i in self.nonDominatedSet[index]]
             rank = np.argsort(cw)
-            newPop = np.concatenate((newPop, self.nonDominatedSet[index][rank[:-delta]]))
+            newPop = np.concatenate((newPop, self.nonDominatedSet[index][rank[-(delta+1):-1]]))
+        np.random.shuffle(newPop)
         self.pop = self.pop[newPop]
         self.size = size
 
@@ -176,6 +236,5 @@ if __name__ == '__main__':
     pop = Population(100,problem)
     pop.addPopulation(pop.pop)
     pop.naturalSelection(100)
-    print(pop.size)
 
 

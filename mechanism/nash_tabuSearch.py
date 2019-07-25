@@ -103,7 +103,7 @@ class TabuSearch:
     def add2TabuList(self,ind):
         self.TabuList[self.TabuIndex] = ind
         self.TabuIndex += 1
-        if self.TabuIndex == 5:
+        if self.TabuIndex == 20:
             self.TabuIndex = 0
 
     def search(self,num_neighbor,type=0):
