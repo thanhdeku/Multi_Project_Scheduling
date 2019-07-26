@@ -93,13 +93,9 @@ class Individual():
         if type == 1:
             return self.problem.computeSalary(self.representation)
 
-    def isDominate(self,ind):
-        result = -1
-        if self.getFitness(0) <= ind.getFitness(0):
-            result += 1
-        if self.getFitness(1) <= ind.getFitness(1):
-            result += 1
-        return result
+    def dominate(self,ind):
+        return (self.getFitness(0) <= ind.getFitness(0) or self.getFitness(1) <= ind.getFitness(1)) \
+               and (self.getFitness(0) < ind.getFitness(0) or self.getFitness(1) < ind.getFitness(1))
 
 class Population():
     def __init__(self, size, problem, init=True):
@@ -110,28 +106,35 @@ class Population():
             self.pop = self.generate_population()
         self.nonDominatedRank, self.nonDominatedSet = self.nonDominatedSort()
         self.crowdingDistance = self.computeCrowdingDistance()
+        self.best = self.getBest()
+
+    def getBest(self):
+        best = []
+        for i in self.nonDominatedSet[0]:
+            best.append(Individual(self.problem,self.get(i).representation,False))
+        return np.array(best)
 
     def nonDominatedSort(self):
         rank = np.zeros(self.size,dtype=int)
         f_nonDominate = {}
         f_nonDominate[0] = np.array([],dtype=int)
         S = {}
-        N = {}
+        N = np.zeros(self.size,dtype=int)
         for i in range(self.size):
             p = self.get(i)
             si = np.array([],dtype=int)
-            ni = 0
             for j in range(self.size):
                 if i != j:
                     q = self.get(j)
-                    if p.isDominate(q) == 1:
+                    if p.dominate(q):
                         si = np.append(si,j)
-                    elif q.isDominate(p) == 1:
-                        ni += 1
+                    elif q.dominate(p):
+                        N[i] += 1
             S[i] = si
-            N[i] = ni
-            if ni == 0:
+            if N[i] == 0:
+                rank[i] = 0
                 f_nonDominate[0] = np.append(f_nonDominate[0],i)
+
         index = 0
         while(len(f_nonDominate[index]) != 0):
             Q = np.array([],dtype=int)
@@ -139,7 +142,7 @@ class Population():
                 for q in S[p]:
                     N[q] = N[q] - 1
                     if N[q] == 0:
-                        rank[q] = index + 1
+                        rank[q] = rank[q] + 1
                         Q = np.append(Q,q)
             index += 1
             f_nonDominate[index] = Q
@@ -194,9 +197,9 @@ class Population():
     def updateInfo(self):
         self.nonDominatedRank, self.nonDominatedSet = self.nonDominatedSort()
         self.crowdingDistance = self.computeCrowdingDistance()
+        self.best = self.getBest()
 
     def naturalSelection(self, size):
-        self.updateInfo()
         newPop = np.array([],dtype=int)
         index = 0
         length = 0

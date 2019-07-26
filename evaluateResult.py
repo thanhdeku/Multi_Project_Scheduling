@@ -43,7 +43,7 @@ class EvaluateParetoFront:
         tb = (self.paretoFront - min)/delta
         tb = tb ** 2
         tb = np.sqrt(np.sum(tb,axis=1))
-        return np.sum(tb)
+        return np.sum(tb)/self.nps
 
 if __name__ == '__main__':
     data = loadData('data/data-J5-O8-M5-S136.txt')

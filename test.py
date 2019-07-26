@@ -2,6 +2,9 @@
 import time
 import numpy as np
 
-w = open('Result/nsga.txt','w')
-w.write('x')
-w.close()
+x = np.array([[]])
+y = np.array([1,2,3])
+z = np.array([3,2,1])
+x = np.append(x,y)
+x = np.append(x,z)
+print(x)
